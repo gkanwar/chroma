@@ -10,6 +10,7 @@
 #include "meas/inline/io/inline_list_obj.h"
 #include "meas/inline/io/inline_szin_read_obj.h"
 #include "meas/inline/io/inline_szin_write_obj.h"
+#include "meas/inline/io/inline_tejpack_write_obj.h"
 #include "meas/inline/io/inline_nersc_read_obj.h"
 #include "meas/inline/io/inline_nersc_write_obj.h"
 
@@ -65,6 +66,8 @@ namespace Chroma
 
 	success &= InlineSZINReadNamedObjEnv::registerAll();
 	success &= InlineSZINWriteNamedObjEnv::registerAll();
+
+        success &= InlineTejPackWriteNamedObjEnv::registerAll();
 
 	success &= InlineNERSCReadNamedObjEnv::registerAll();
 	success &= InlineNERSCWriteNamedObjEnv::registerAll();

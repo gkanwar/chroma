@@ -222,6 +222,7 @@ nobase_include_HEADERS = \
         io/readcppacs.h io/cppacs_io.h \
 	io/readszin.h io/szin_io.h \
         io/writemilc.h io/writeszin.h \
+	io/writetejpack.h \
 	io/monomial_io.h \
 	io/xml_group_reader.h \
 	meas/eig/eig.h meas/eig/gramschm.h meas/eig/gramschm_array.h \
@@ -618,6 +619,7 @@ nobase_include_HEADERS += \
 	io/io_w.h io/kyuqprop_io.h \
         io/readszinferm_w.h io/readszinqprop_w.h \
 	io/writeszinqprop_w.h \
+	io/writetejpackqprop_w.h \
         io/overlap_state_info.h  \
 	meas/eig/eig_w.h meas/eig/ischiral_w.h \
 	meas/hadron/barcomp_w.h \
@@ -923,6 +925,7 @@ nobase_include_HEADERS += \
 	meas/inline/io/inline_qio_write_erase_obj.h \
 	meas/inline/io/inline_szin_read_obj.h \
 	meas/inline/io/inline_szin_write_obj.h \
+	meas/inline/io/inline_tejpack_write_obj.h \
 	meas/inline/io/inline_nersc_read_obj.h \
 	meas/inline/io/inline_nersc_write_obj.h \
 	meas/inline/io/inline_eigen_bin_colvec_read_obj.h \
@@ -936,6 +939,7 @@ nobase_include_HEADERS += \
         meas/inline/io/qio_write_obj_funcmap.h \
         meas/inline/io/szin_read_obj_funcmap.h \
         meas/inline/io/szin_write_obj_funcmap.h \
+	meas/inline/io/tejpack_write_obj_funcmap.h \
         meas/inline/io/xml_write_obj_funcmap.h \
 	meas/inline/io/inline_usqcd_read_ddpairs_prop.h \
 	meas/inline/io/inline_usqcd_write_ddpairs_prop.h \
@@ -1201,6 +1205,7 @@ libchroma_a_SOURCES = \
 	io/param_io.cc io/qprop_io.cc io/readmilc.cc \
 	io/readszin.cc io/szin_io.cc \
 	io/writemilc.cc io/writeszin.cc \
+	io/writetejpack.cc \
         io/readwupp.cc \
 	io/xml_group_reader.cc \
 	meas/eig/eig_spec.cc meas/eig/eig_spec_array.cc \
@@ -1558,6 +1563,7 @@ libchroma_a_SOURCES += \
 	actions/ferm/qprop/quarkprop4_w.cc \
 	io/readszinferm_w.cc io/readszinqprop_w.cc \
 	io/writeszinqprop_w.cc \
+	io/writetejpackqprop_w.cc \
 	meas/eig/ischiral_w.cc \
 	meas/hadron/barcomp_w.cc \
 	meas/hadron/barcomp_diquark_w.cc \
@@ -1783,6 +1789,7 @@ libchroma_a_SOURCES += \
 	meas/inline/io/inline_qio_write_erase_obj.cc \
 	meas/inline/io/inline_szin_read_obj.cc \
 	meas/inline/io/inline_szin_write_obj.cc \
+	meas/inline/io/inline_tejpack_write_obj.cc \
 	meas/inline/io/inline_nersc_read_obj.cc \
 	meas/inline/io/inline_nersc_write_obj.cc \
 	meas/inline/io/inline_eigen_bin_colvec_read_obj.cc \
@@ -1796,6 +1803,7 @@ libchroma_a_SOURCES += \
         meas/inline/io/qio_write_obj_funcmap.cc \
         meas/inline/io/szin_read_obj_funcmap.cc \
         meas/inline/io/szin_write_obj_funcmap.cc \
+	meas/inline/io/tejpack_write_obj_funcmap.cc \
         meas/inline/io/xml_write_obj_funcmap.cc \
 	meas/inline/io/inline_usqcd_read_ddpairs_prop.cc \
 	meas/inline/io/inline_usqcd_write_ddpairs_prop.cc \
