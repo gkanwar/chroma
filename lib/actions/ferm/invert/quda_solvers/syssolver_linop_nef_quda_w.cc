@@ -71,7 +71,10 @@ namespace Chroma
     //copy negative parity
 #ifndef BUILD_QUDA_DEVIFACE_SPINOR
     for(unsigned int s=0; s<quda_inv_param.Ls; s++){
-      memcpy(reinterpret_cast<char*>(&spinorIn[fermsize*s]),reinterpret_cast<char*>(const_cast<REAL*>(&(chi_s[s].elem(rb[1].start()).elem(0).elem(0).real()))),fermsize*sizeof(REAL));
+      memcpy(
+          reinterpret_cast<char*>(&spinorIn[fermsize*s]),
+          reinterpret_cast<char*>(const_cast<REAL*>(&(chi_s[s].elem(rb[1].start()).elem(0).elem(0).real().elem()))),
+          fermsize*sizeof(REAL));
     }
 #else
     //not yet
@@ -95,7 +98,10 @@ namespace Chroma
 #ifndef BUILD_QUDA_DEVIFACE_SPINOR
     for(unsigned int s=0; s<quda_inv_param.Ls; s++){
       //      memset(reinterpret_cast<char*>(&(psi_s[s].elem(all.start()).elem(0).elem(0).real())),0,fermsize*2*sizeof(REAL));
-      memcpy(reinterpret_cast<char*>(const_cast<REAL*>(&(psi_s[s].elem(rb[1].start()).elem(0).elem(0).real()))),reinterpret_cast<char*>(&spinorOut[fermsize*s]),fermsize*sizeof(REAL));
+      memcpy(
+          reinterpret_cast<char*>(const_cast<REAL*>(&(psi_s[s].elem(rb[1].start()).elem(0).elem(0).real().elem()))),
+          reinterpret_cast<char*>(&spinorOut[fermsize*s]),
+          fermsize*sizeof(REAL));
     }
 #else
     //not yet implemented
