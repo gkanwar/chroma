@@ -462,77 +462,111 @@ namespace Chroma
       // Loop over all time slices for the source. This is the same 
       // as the subsets for  phases
 
-      // Loop over each operator 
-      for(int l=0; l < params.param.displacement_list.size(); ++l)
-      {
-	swiss.reset();
-	swiss.start();
 
-	// Build the operator
-	QDPIO::cout << "Elemental operator: op = " << l << std::endl;
+      // HACK(Tej): Just compute the plaquette per site for now
+      LatticeColorMatrix tmp_1;
+      LatticeColorMatrix tmp_2;
+      LatticeColorMatrix tmp_3;
+      LatticeComplex cplaq;
+      int plane = 0;
+      for (int mu = 0; mu < Nd-1; ++mu) {
+        if (mu == params.param.decay_dir) continue;
+        for (int nu = mu+1; nu < Nd; ++nu) {
+          if (nu == params.param.decay_dir) continue;
+          plane++;
 
-	// Make sure displacement is something sensible
-	multi1d<int> disp = normDisp(params.param.displacement_list[l]);
+          // Make the plaquettes
+          tmp_1 = shift(u[nu], FORWARD, mu);
+          tmp_2 = shift(u[mu], FORWARD, nu);
+          tmp_3 = tmp_1 * adj(tmp_2);
+          tmp_1 = tmp_3 * adj(u[nu]);
+          cplaq = trace(u[mu] * tmp_1);
 
-	QDPIO::cout << "displacement = " << disp << std::endl;
+          /// TODO!
+          push(xml_out, "LatticePlaq");
+          write(xml_out, "plane", plane);
+          write(xml_out, "plaq", cplaq);
+          pop(xml_out);
+        }
+      }
+      
+          
+//       // Loop over each operator 
+//       for(int l=0; l < params.param.displacement_list.size(); ++l)
+//       {
+// 	swiss.reset();
+// 	swiss.start();
 
-	// Right mag field
-	for(int j = 0 ; j < B_mag.size(); ++j)
-	{
-	  // Displace the right std::vector
-	  LatticeColorMatrix shift_vec = rightNabla(u_smr, 
-						    B_mag[j],
-						    params.param.displacement_length, 
-						    disp);
+// 	// Build the operator
+// 	QDPIO::cout << "Elemental operator: op = " << l << std::endl;
 
-	  // Left mag field
-	  for(int i = 0 ; i < B_mag.size(); ++i)
-	  {
-	    // Contract over color indices.
-	    // NOTE: no need for daggers - B fields are hermitian
-	    LatticeComplex lop = trace(B_mag[i] * shift_vec);
+// 	// Make sure displacement is something sensible
+// 	multi1d<int> disp = normDisp(params.param.displacement_list[l]);
 
+// 	QDPIO::cout << "displacement = " << disp << std::endl;
 
-	    // Big loop over the momentum projection
-	    for(int mom_num = 0 ; mom_num < phases.numMom() ; ++mom_num) 
-	    {
-	      // Slow fourier-transform
-	      multi1d<ComplexD> op_sum = sumMulti(phases[mom_num] * lop, phases.getSet());
+// 	// Right mag field
+// 	for(int j = 0 ; j < B_mag.size(); ++j)
+// 	{
+// 	  // Displace the right std::vector
+// 	  LatticeColorMatrix shift_vec = rightNabla(u_smr, 
+// 						    B_mag[j],
+// 						    params.param.displacement_length, 
+// 						    disp);
 
-	      // The keys for the spin and displacements for this particular elemental operator
-	      // No displacement for left B-field, only displace right B-field
-	      // Invert the time - make it an independent key.
-	      KeyValGlueElementalOperator_t buf;
+// 	  // Left mag field
+// 	  for(int i = 0 ; i < B_mag.size(); ++i)
+// 	  {
+// 	    // Contract over color indices.
+// 	    // NOTE: no need for daggers - B fields are hermitian
+// 	    LatticeComplex lop = trace(B_mag[i] * shift_vec);
+//             // push(xml_out, "SpatialOp");
+//             // write(xml_out, "left", i+1);
+//             // write(xml_out, "right", j+1);
+//             // write(xml_out, "disp", disp);
+//             // write(xml_out, "corr", lop);
+//             // pop(xml_out);
 
-	      for(int t=0; t < phases.numSubsets(); ++t)
-	      {
-		buf.key.key().t_slice       = t;
-		buf.key.key().mom           = phases.numToMom(mom_num);
-		buf.key.key().left          = i + 1;
-		buf.key.key().right         = j + 1;
-		buf.key.key().displacement  = disp;
+// 	    // Big loop over the momentum projection
+// 	    for(int mom_num = 0 ; mom_num < phases.numMom() ; ++mom_num) 
+// 	    {
+// 	      // Slow fourier-transform
+// 	      multi1d<ComplexD> op_sum = sumMulti(phases[mom_num] * lop, phases.getSet());
 
-		// Should not be a phase
-		buf.val.data().op.resize(1);
-		buf.val.data().op(0) = op_sum[t];
+// 	      // The keys for the spin and displacements for this particular elemental operator
+// 	      // No displacement for left B-field, only displace right B-field
+// 	      // Invert the time - make it an independent key.
+// 	      KeyValGlueElementalOperator_t buf;
 
-//		QDPIO::cout << "insert: mom= " << phases.numToMom(mom_num) << " displacement= " << disp << std::endl; 
-		qdp_db.insert(buf.key, buf.val);
+// 	      for(int t=0; t < phases.numSubsets(); ++t)
+// 	      {
+// 		buf.key.key().t_slice       = t;
+// 		buf.key.key().mom           = phases.numToMom(mom_num);
+// 		buf.key.key().left          = i + 1;
+// 		buf.key.key().right         = j + 1;
+// 		buf.key.key().displacement  = disp;
 
-	      } // end for t
-	    } // end for i
-	  } // end for j
+// 		// Should not be a phase
+// 		buf.val.data().op.resize(1);
+// 		buf.val.data().op(0) = op_sum[t];
 
-	} // mom_num
+// //		QDPIO::cout << "insert: mom= " << phases.numToMom(mom_num) << " displacement= " << disp << std::endl; 
+// 		qdp_db.insert(buf.key, buf.val);
 
-	swiss.stop();
+// 	      } // end for t
+// 	    } // end for i
+// 	  } // end for j
 
-	QDPIO::cout << "Glue operator= " << l 
-		    << "  time= "
-		    << swiss.getTimeInSeconds() 
-		    << " secs" << std::endl;
+// 	} // mom_num
 
-      } // for l
+// 	swiss.stop();
+
+// 	QDPIO::cout << "Glue operator= " << l 
+// 		    << "  time= "
+// 		    << swiss.getTimeInSeconds() 
+// 		    << " secs" << std::endl;
+
+//       } // for l
 
       pop(xml_out); // ElementalOps
 
