@@ -20,8 +20,8 @@ namespace Chroma {
  */    
 
 void writeTejPackQpropSlice(const LatticePropagator& q,
-                         const std::string& file,
-                         int j_decay, int t_slice)
+                            const std::string& file,
+                            int j_decay, int t_slice)
 {
   BinaryFileWriter cfg_out(file);
   // Fetch lattice size config
