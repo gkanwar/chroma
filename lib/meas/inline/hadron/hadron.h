@@ -33,5 +33,6 @@
 #include "inline_mres_w.h"
 #include "inline_qpropqio_w.h"
 #include "inline_qpropadd_w.h"
+#include "inline_position_2pt.h"
 
 #endif
