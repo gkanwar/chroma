@@ -137,6 +137,8 @@ namespace Chroma
       {
         read(paramtop, "xml_up_file", xml_up_file);
         read(paramtop, "xml_down_file", xml_down_file);
+        read(paramtop, "xml_negpar_up_file", xml_negpar_up_file);
+        read(paramtop, "xml_negpar_down_file", xml_negpar_down_file);
       }
     }
     catch(const std::string& e) 
@@ -152,6 +154,8 @@ namespace Chroma
     Chroma::write(xml_out, "Param", param);
     QDP::write(xml_out, "xml_up_file", xml_up_file);
     QDP::write(xml_out, "xml_down_file", xml_down_file);
+    QDP::write(xml_out, "xml_negpar_up_file", xml_negpar_up_file);
+    QDP::write(xml_out, "xml_negpar_down_file", xml_negpar_down_file);
     pop(xml_out);
   }
 
@@ -263,18 +267,24 @@ namespace Chroma
     {
       std::string xml_up_file = makeXMLFileName(params.xml_up_file, update_no);
       std::string xml_down_file = makeXMLFileName(params.xml_down_file, update_no);
+      std::string xml_negpar_up_file = makeXMLFileName(params.xml_negpar_up_file, update_no);
+      std::string xml_negpar_down_file = makeXMLFileName(params.xml_negpar_down_file, update_no);
       push(xml_out, "Position2pt");
       write(xml_out, "update_no", update_no);
       write(xml_out, "xml_up_file", xml_up_file);
       write(xml_out, "xml_down_file", xml_down_file);
+      write(xml_out, "xml_negpar_up_file", xml_negpar_up_file);
+      write(xml_out, "xml_negpar_down_file", xml_negpar_down_file);
       pop(xml_out); 
       XMLFileWriter xml_up(xml_up_file);
       XMLFileWriter xml_down(xml_down_file);
-      func(update_no, xml_up, xml_down);
+      XMLFileWriter xml_negpar_up(xml_negpar_up_file);
+      XMLFileWriter xml_negpar_down(xml_negpar_down_file);
+      func(update_no, xml_up, xml_down, xml_negpar_up, xml_negpar_down);
     }
     else
     {
-      func(update_no, xml_out, xml_out);
+      func(update_no, xml_out, xml_out, xml_out, xml_out);
     }
   }
 
@@ -282,7 +292,7 @@ namespace Chroma
   // Real work done here
   void 
   InlinePosition2pt::func(unsigned long update_no,
-		      XMLWriter& xml_up_out, XMLWriter& xml_down_out) 
+		      XMLWriter& xml_up_out, XMLWriter& xml_down_out, XMLWriter& xml_negpar_up_out, XMLWriter& xml_negpar_down_out) 
   {
     // Test and grab a reference to the gauge field
     XMLBufferWriter gauge_xml;
@@ -311,6 +321,10 @@ namespace Chroma
     write(xml_up_out, "update_no", update_no);
     push(xml_down_out, "Position2pt");
     write(xml_down_out, "update_no", update_no);
+    push(xml_negpar_up_out, "Position2pt");
+    write(xml_negpar_up_out, "update_no", update_no);
+    push(xml_negpar_down_out, "Position2pt");
+    write(xml_negpar_down_out, "update_no", update_no);
     QDPIO::cout << "Write position-space nucleon " << std::endl ;
     QDPIO::cout << "     Gauge group: SU(" << Nc << ")" << std::endl;
     QDPIO::cout << "     volume: " << Layout::lattSize()[0];
@@ -319,15 +333,17 @@ namespace Chroma
     }
     QDPIO::cout << std::endl;
     proginfo(xml_up_out);    // Print out basic program info
-    // Write out the input
     params.write(xml_up_out, "Input");
-    // Write out the config info
     write(xml_up_out, "Config_info", gauge_xml);
     proginfo(xml_down_out);    // Print out basic program info
-    // Write out the input
     params.write(xml_down_out, "Input");
-    // Write out the config info
     write(xml_down_out, "Config_info", gauge_xml);
+    proginfo(xml_negpar_up_out);    // Print out basic program info
+    params.write(xml_negpar_up_out, "Input");
+    write(xml_negpar_up_out, "Config_info", gauge_xml);
+    proginfo(xml_negpar_down_out);    // Print out basic program info
+    params.write(xml_negpar_down_out, "Input");
+    write(xml_negpar_down_out, "Config_info", gauge_xml);
 
 
     // Now loop over the various fermion pairs
@@ -413,12 +429,18 @@ namespace Chroma
       // Run Measurement
       push(xml_up_out,"elem");
       push(xml_down_out,"elem");
-      position2pt(u, t_src1, sink_prop_1, xml_up_out, xml_down_out, source_sink_type);
+      push(xml_negpar_up_out,"elem");
+      push(xml_negpar_down_out,"elem");
+      position2pt(u, t_src1, sink_prop_1, xml_up_out, xml_down_out, xml_negpar_up_out, xml_negpar_down_out, source_sink_type);
       pop(xml_up_out);  // close elem
       pop(xml_down_out);  // close elem
+      pop(xml_negpar_up_out);  // close elem
+      pop(xml_negpar_down_out);  // close elem
     }
     pop(xml_up_out);  // close Position2pt
     pop(xml_down_out);  // close Position2pt
+    pop(xml_negpar_up_out);  // close Position2pt
+    pop(xml_negpar_down_out);  // close Position2pt
 
     QDPIO::cout << InlinePosition2ptEnv::name << ": ran successfully" << std::endl;
   } 

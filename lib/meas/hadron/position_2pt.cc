@@ -12,6 +12,8 @@ void position2pt(const multi1d<LatticeColorMatrix>& u,
     const LatticePropagator& q1,
     XMLWriter& xml_up,
     XMLWriter& xml_down,
+    XMLWriter& xml_negpar_up,
+    XMLWriter& xml_negpar_down,
     std::string& base_name)
 {
 
@@ -62,25 +64,40 @@ void position2pt(const multi1d<LatticeColorMatrix>& u,
 
   QDPIO::cout<<"Starting Correlation Functions" << std::endl;
 
+  // Shift origin of propagator to source point
+  LatticePropagator q1_cpy = q1;
+  LatticePropagator q1_tmp;
+  for(int mu=0; mu<Nd; ++mu)
+  {
+    for(int steps=src_coord[mu]; steps>0; --steps)
+      {
+        q1_tmp = shift(q1_cpy,FORWARD,mu);
+        q1_cpy = q1_tmp;
+      }
+  }
+
+
   // PION CORRELATION FUNCTIONS
-  LatticePropagator adj_q1 = adj(q1);
+  LatticePropagator adj_q1_cpy = adj(q1_cpy);
   //LatticePropagator adj_q2 = adj(q2);
-  LatticeComplex pion_den = trace(q1 * adj_q1);
+  LatticeComplex pion_den = trace(q1_cpy * adj_q1_cpy);
   //LatticeComplex kaon_den = trace(q1 * adj_q2);
 
   // A0 CORELATION FUNCTIONS: negative-definite for free particle
   QDPIO::cout<<"Onto A0" << std::endl;
   // Antiparticle correlator
-  LatticePropagator q1_anti = g5 * adj(q1) * g5;
+  LatticePropagator q1_cpy_anti = g5 * adj(q1_cpy) * g5;
   // Rho spin states
-  LatticeComplex a0_den = trace( q1_anti * q1_anti );
+  LatticeComplex a0_den = trace( q1_cpy_anti * q1_cpy_anti );
 
   // BARYON CORRElATION FUNCTIONS
   QDPIO::cout<<"Onto Nucleon" << std::endl;
   // Interpolators are standard Dirac upper components operator contributing in NR quark model, 2--Dirac lower components
-  LatticePropagator diq11 = quarkContract13(cg5 * q1, q1 * cg5);
-  LatticeComplex nucleon_up_den = trace(S_proj_up * q1 * diq11) + trace(S_proj_up * q1 * traceSpin(diq11));
-  LatticeComplex nucleon_down_den = trace(S_proj_down * q1 * diq11) + trace(S_proj_down * q1 * traceSpin(diq11));
+  LatticePropagator diq11 = quarkContract13(cg5 * q1_cpy, q1_cpy * cg5);
+  LatticeComplex nucleon_up_den = trace(S_proj_up * q1_cpy * diq11) + trace(S_proj_up * q1_cpy * traceSpin(diq11));
+  LatticeComplex nucleon_down_den = trace(S_proj_down * q1_cpy * diq11) + trace(S_proj_down * q1_cpy * traceSpin(diq11));
+  LatticeComplex negpar_nucleon_up_den = trace(SN_proj_up * q1 * diq11) + trace(SN_proj_up * q1 * traceSpin(diq11));
+  LatticeComplex negpar_nucleon_down_den = trace(SN_proj_down * q1 * diq11) + trace(SN_proj_down * q1 * traceSpin(diq11));
 
   // xml nucleon_up zero momentum corr
   XMLArrayWriter xml_upcorr(xml_up);
@@ -100,6 +117,24 @@ void position2pt(const multi1d<LatticeColorMatrix>& u,
   write(xml_downcorr, "Corr", nucleon_down_den);
   pop(xml_downcorr); // close elem
   pop(xml_downcorr); // close Position2pt
+  // xml nucleon_up zero momentum corr
+  XMLArrayWriter xml_negparupcorr(xml_negpar_up);
+  push(xml_negparupcorr,"PositionCorrs");
+  push(xml_negparupcorr,"elem");
+  write(xml_negparupcorr, "Hadron", base_name + "NEGPAR_NUCLEON_UP");
+  write(xml_negparupcorr, "Coords", src_coord);
+  write(xml_negparupcorr, "Corr", negpar_nucleon_up_den);
+  pop(xml_negparupcorr); // close elem
+  pop(xml_negparupcorr); // close Position2pt
+  // xml nucleon_down zero momentum corr
+  XMLArrayWriter xml_negpardowncorr(xml_negpar_down);
+  push(xml_negpardowncorr,"PositionCorrs");
+  push(xml_negpardowncorr,"elem");
+  write(xml_negpardowncorr, "Hadron", base_name + "NEGPAR_NUCLEON_DOWN");
+  write(xml_negpardowncorr, "Coords", src_coord);
+  write(xml_negpardowncorr, "Corr", negpar_nucleon_down_den);
+  pop(xml_negpardowncorr); // close elem
+  pop(xml_negpardowncorr); // close Position2pt
 
 
   #endif

@@ -17,6 +17,8 @@ void position2pt(const multi1d<LatticeColorMatrix>& u,
     const LatticePropagator& q1,
     XMLWriter& xml_up,
     XMLWriter& xml_down,
+    XMLWriter& xml_negpar_up,
+    XMLWriter& xml_negpar_down,
     std::string& base_name);
 
 } // end namespace Chroma  

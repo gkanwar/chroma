@@ -48,6 +48,8 @@ namespace Chroma
 
     std::string xml_up_file;  // Alternate XML file pattern
     std::string xml_down_file;  // Alternate XML file pattern
+    std::string xml_negpar_up_file;  // Alternate XML file pattern
+    std::string xml_negpar_down_file;  // Alternate XML file pattern
   };
 
 
@@ -69,7 +71,7 @@ namespace Chroma
   protected:
     //! Do the measurement
     void func(const unsigned long update_no,
-	      XMLWriter& xml_up_out, XMLWriter& xml_down_out); 
+	      XMLWriter& xml_up_out, XMLWriter& xml_down_out, XMLWriter& xml_negpar_up_out, XMLWriter& xml_negpar_down_out); 
 
   private:
     InlinePosition2ptParams params;
