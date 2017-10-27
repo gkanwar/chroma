@@ -21,4 +21,5 @@
 #include "meas/inline/glue/inline_polylp.h"
 #include "meas/inline/glue/inline_wilslp.h"
 #include "meas/inline/glue/inline_fuzwilp.h"
+#include "meas/inline/glue/inline_shift_origin.h"
 #endif
