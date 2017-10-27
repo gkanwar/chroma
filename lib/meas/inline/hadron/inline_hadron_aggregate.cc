@@ -80,6 +80,7 @@
 //#include "meas/inline/hadron/inline_stoch_laph_quark_w.h"
 //#include "meas/inline/hadron/inline_stoch_laph_baryon_w.h"
 #include "meas/inline/hadron/inline_position_2pt.h"
+#include "meas/inline/hadron/inline_U1B_add_w.h"
 #include "meas/inline/hadron/inline_barspec_db_w.h"
 
 // Grab all fermacts to make sure they are registered
@@ -182,6 +183,7 @@ namespace Chroma
 //	success &= InlineStochLaphQuarkEnv::registerAll();
 //	success &= InlineStochLaphBaryonEnv::registerAll();
         success &= InlinePosition2ptEnv::registerAll();
+        success &= InlineU1BAddEnv::registerAll();
 
 	registered = true;
       }

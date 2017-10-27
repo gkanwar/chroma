@@ -914,6 +914,7 @@ nobase_include_HEADERS += \
 	meas/inline/hadron/inline_npr_w.h \
 	meas/inline/hadron/inline_stag_to_wils.h \
 	meas/inline/hadron/inline_position_2pt.h \
+	meas/inline/hadron/inline_U1B_add_w.h \
 	meas/inline/hadron_s/hadron_s.h \
 	meas/inline/hadron_s/inline_make_source_s.h \
 	meas/inline/hadron_s/inline_propagator_s.h \
@@ -1777,6 +1778,7 @@ libchroma_a_SOURCES += \
 	meas/inline/hadron/inline_stag_to_wils.cc \
 	meas/inline/hadron/inline_barspec_db_w.cc \
 	meas/inline/hadron/inline_position_2pt.cc \
+	meas/inline/hadron/inline_U1B_add_w.cc \
 	meas/inline/hadron_s/inline_hadron_aggregate_s.cc \
 	meas/inline/hadron_s/inline_make_source_s.cc \
 	meas/inline/hadron_s/inline_propagator_s.cc \
