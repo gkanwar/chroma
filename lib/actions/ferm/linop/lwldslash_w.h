@@ -25,13 +25,13 @@ namespace Chroma
    *
    * This routine applies the operator D' to Psi, putting the result in Chi.
    *
-   *	       Nd-1
-   *	       ---
-   *	       \
-   *   chi(x)  :=  >  U  (x) (1 - isign gamma  ) psi(x+mu)
-   *	       /    mu			  mu
-   *	       ---
-   *	       mu=0
+   *                Nd-1
+   *                ---
+   *                \
+   *   chi(x)  :=    >  U  (x) (1 - isign gamma  ) psi(x+mu)
+   *                /    mu	               mu
+   *                ---
+   *	            mu=0
    *
    *	             Nd-1
    *	             ---

@@ -18,15 +18,15 @@
 
     <StartUpdateNum>0</StartUpdateNum>
     <NWarmUpUpdates>50</NWarmUpUpdates>  
-    <NProductionUpdates>100</NProductionUpdates>
-    <NUpdatesThisRun>100</NUpdatesThisRun>
-    <SaveInterval>5</SaveInterval>
+    <NProductionUpdates>1000</NProductionUpdates>
+    <NUpdatesThisRun>1000</NUpdatesThisRun>
+    <SaveInterval>1</SaveInterval>
     <SavePrefix>dummy_run</SavePrefix>
     <SaveVolfmt>SINGLEFILE</SaveVolfmt>
     <ReproCheckP>false</ReproCheckP>
-    <ReverseCheckP>true</ReverseCheckP>
+    <ReverseCheckP>false</ReverseCheckP>
     <ReverseCheckFrequency>1</ReverseCheckFrequency>
-    <InlineMeasurements>
+    <!--<InlineMeasurements>
       <elem>
         <Name>POLYAKOV_LOOP</Name>
         <Frequency>1</Frequency>
@@ -37,7 +37,7 @@
           <gauge_id>default_gauge_field</gauge_id>
         </NamedObject>
       </elem>
-    </InlineMeasurements>
+    </InlineMeasurements>-->
   </MCControl>
 
   <HMCTrj>
@@ -45,9 +45,8 @@
       <elem>
 	<Name>GAUGE_MONOMIAL</Name>
 	<GaugeAction>
-	   <Name>PLAQ_PLUS_ADJOINT_GAUGEACT</Name>
-	   <beta_F>6.0</beta_F>
-	   <beta_A>-1.5</beta_A>
+	   <Name>WILSON_GAUGEACT</Name>
+	   <beta>5.7</beta>
 	   <GaugeBC>
 		<Name>PERIODIC_GAUGEBC</Name>
            </GaugeBC>
@@ -69,13 +68,13 @@
 	<Integrator>	
 	  <!-- Name>LCM_4MN5FV</Name -->
 	  <Name>LCM_STS_LEAPFROG</Name>
-	  <n_steps>10</n_steps>
+	  <n_steps>15</n_steps>
 	  <monomial_ids>
 	    <elem>gauge</elem>
 	  </monomial_ids>
 	</Integrator>
    </MDIntegrator>
-   <nrow>4 4 4 4</nrow>
+   <nrow>4 4 4 8</nrow>
  </HMCTrj>
 
 </Params>

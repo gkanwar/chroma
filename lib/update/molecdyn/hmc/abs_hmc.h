@@ -53,9 +53,40 @@ namespace Chroma
       // 1) Refresh momenta
       //
       refreshP(s);
-      
+      // FORNOW
+      write(xml_out, "initial_P", s.getP()) ;
+      write(xml_out, "initial_Q", s.getQ()) ;
+
       // Refresh Pseudofermions
       H_MC.refreshInternalFields(s);
+      // FORNOW
+      auto H_MC_exact = dynamic_cast< const ExactHamiltonian& >(H_MC);
+      for (int i = 0; i < H_MC_exact.monomials.size(); ++i) {
+        try {
+          write(xml_out, "attempt_Pf", i);
+          const auto& fm =
+              dynamic_cast< const TwoFlavorExactWilsonTypeFermMonomial<
+                multi1d<LatticeColorMatrix>,multi1d<LatticeColorMatrix>,
+                              LatticeFermion>& >(
+                                  *(H_MC_exact.monomials[i]));
+          write(xml_out, "cast_success_Pf", i);
+          fm.writeInternalFields(xml_out, "initial_Pf");
+        } catch (const std::bad_cast& e) {
+          try {
+            write(xml_out, "attempt_rat_Pf", i);
+            const auto& fm =
+                dynamic_cast< const OneFlavorRatExactWilsonTypeFermMonomial<
+              multi1d<LatticeColorMatrix>,multi1d<LatticeColorMatrix>,
+                                LatticeFermion>& >(
+                                    *(H_MC_exact.monomials[i]));
+            write(xml_out, "cast_success_rat_Pf", i);
+            fm.writeInternalFields(xml_out, "initial_Pf");
+          }
+          catch (const std::bad_cast& e) {
+            write(xml_out, "cast_fail_Pf", i);
+          }
+        }
+      }
       
       // SaveState -- Perhaps this could be done better?
       Handle< AbsFieldState<P,Q> >  s_old(s.clone());
@@ -135,6 +166,10 @@ namespace Chroma
 	
       }
 
+      // FORNOW
+      write(xml_out, "final_P", s.getP()) ;
+      write(xml_out, "final_Q", s.getQ()) ;
+      
       //  Measure the energy of the new state
       Double KE, PE;
 

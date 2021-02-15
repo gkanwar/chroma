@@ -258,6 +258,7 @@ nobase_include_HEADERS = \
         meas/hadron/heavy_hadrons_su3_w.h\
 	meas/hadron/heavy_hadron_potentials_w.h\
 	meas/hadron/position_2pt.h\
+	meas/hadron/nucleon_pes_2pt.h\
 	meas/hadron/spin_insertion.h \
 	meas/hadron/spin_insertion_factory.h \
         meas/hadron/spin_insertion_aggregate.h \
@@ -914,6 +915,7 @@ nobase_include_HEADERS += \
 	meas/inline/hadron/inline_npr_w.h \
 	meas/inline/hadron/inline_stag_to_wils.h \
 	meas/inline/hadron/inline_position_2pt.h \
+	meas/inline/hadron/inline_nucleon_pes_2pt.h \
 	meas/inline/hadron/inline_U1B_add_w.h \
 	meas/inline/hadron_s/hadron_s.h \
 	meas/inline/hadron_s/inline_make_source_s.h \
@@ -1243,6 +1245,7 @@ libchroma_a_SOURCES = \
         meas/hadron/no_spin_insertion.cc \
 	meas/hadron/stoch_var.cc \
 	meas/hadron/position_2pt.cc \
+	meas/hadron/nucleon_pes_2pt.cc \
         meas/sinks/pt_sink_smearing.cc \
         meas/sinks/sh_sink_smearing.cc \
         meas/sinks/norm_sh_sink_smearing.cc \
@@ -1778,6 +1781,7 @@ libchroma_a_SOURCES += \
 	meas/inline/hadron/inline_stag_to_wils.cc \
 	meas/inline/hadron/inline_barspec_db_w.cc \
 	meas/inline/hadron/inline_position_2pt.cc \
+	meas/inline/hadron/inline_nucleon_pes_2pt.cc \
 	meas/inline/hadron/inline_U1B_add_w.cc \
 	meas/inline/hadron_s/inline_hadron_aggregate_s.cc \
 	meas/inline/hadron_s/inline_make_source_s.cc \

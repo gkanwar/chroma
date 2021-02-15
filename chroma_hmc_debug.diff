@@ -1,0 +1,153 @@
+diff --git a/lib/update/molecdyn/hamiltonian/exact_hamiltonian.h b/lib/update/molecdyn/hamiltonian/exact_hamiltonian.h
+index fd9bffc3f..2dd9778e9 100644
+--- a/lib/update/molecdyn/hamiltonian/exact_hamiltonian.h
++++ b/lib/update/molecdyn/hamiltonian/exact_hamiltonian.h
+@@ -144,11 +144,11 @@ namespace Chroma
+ 
+     //! This creates the hamiltonian. It is similar to the 
+     void create(const multi1d<std::string>& monomial_ids);
+-    
+ 
++   public:
++    // FORNOW: Break encapsulation for tests!
+     multi1d< Handle<ExactMon> >  monomials;
+ 
+-    
+   };
+ 
+ }
+diff --git a/lib/update/molecdyn/hmc/abs_hmc.h b/lib/update/molecdyn/hmc/abs_hmc.h
+index 5c6bb1498..e326eb9e9 100644
+--- a/lib/update/molecdyn/hmc/abs_hmc.h
++++ b/lib/update/molecdyn/hmc/abs_hmc.h
+@@ -53,9 +53,40 @@ namespace Chroma
+       // 1) Refresh momenta
+       //
+       refreshP(s);
+-      
++      // FORNOW
++      write(xml_out, "initial_P", s.getP()) ;
++      write(xml_out, "initial_Q", s.getQ()) ;
++
+       // Refresh Pseudofermions
+       H_MC.refreshInternalFields(s);
++      // FORNOW
++      auto H_MC_exact = dynamic_cast< const ExactHamiltonian& >(H_MC);
++      for (int i = 0; i < H_MC_exact.monomials.size(); ++i) {
++        try {
++          write(xml_out, "attempt_Pf", i);
++          const auto& fm =
++              dynamic_cast< const TwoFlavorExactWilsonTypeFermMonomial<
++                multi1d<LatticeColorMatrix>,multi1d<LatticeColorMatrix>,
++                              LatticeFermion>& >(
++                                  *(H_MC_exact.monomials[i]));
++          write(xml_out, "cast_success_Pf", i);
++          fm.writeInternalFields(xml_out, "initial_Pf");
++        } catch (const std::bad_cast& e) {
++          try {
++            write(xml_out, "attempt_rat_Pf", i);
++            const auto& fm =
++                dynamic_cast< const OneFlavorRatExactWilsonTypeFermMonomial<
++              multi1d<LatticeColorMatrix>,multi1d<LatticeColorMatrix>,
++                                LatticeFermion>& >(
++                                    *(H_MC_exact.monomials[i]));
++            write(xml_out, "cast_success_rat_Pf", i);
++            fm.writeInternalFields(xml_out, "initial_Pf");
++          }
++          catch (const std::bad_cast& e) {
++            write(xml_out, "cast_fail_Pf", i);
++          }
++        }
++      }
+       
+       // SaveState -- Perhaps this could be done better?
+       Handle< AbsFieldState<P,Q> >  s_old(s.clone());
+@@ -135,6 +166,10 @@ namespace Chroma
+ 	
+       }
+ 
++      // FORNOW
++      write(xml_out, "final_P", s.getP()) ;
++      write(xml_out, "final_Q", s.getQ()) ;
++      
+       //  Measure the energy of the new state
+       Double KE, PE;
+ 
+diff --git a/lib/update/molecdyn/integrator/lcm_integrator_leaps.cc b/lib/update/molecdyn/integrator/lcm_integrator_leaps.cc
+index d51964007..45113154c 100644
+--- a/lib/update/molecdyn/integrator/lcm_integrator_leaps.cc
++++ b/lib/update/molecdyn/integrator/lcm_integrator_leaps.cc
+@@ -47,6 +47,8 @@ namespace Chroma
+ 	monomials[0].mon->dsdq(dsdQ,s);
+ 	swatch.stop();
+ 	QDPIO::cout << "FORCE TIME: " << monomials[0].id <<  " : " << swatch.getTimeInSeconds() << std::endl;
++        // DEBUG: Store full force
++        write(xml_out, "FullForce", dsdQ);
+ 	pop(xml_out); //elem
+ 	for(int i=1; i < monomials.size(); i++) { 
+ 	  push(xml_out, "elem");
+@@ -56,6 +58,9 @@ namespace Chroma
+ 	  swatch.stop();
+ 	  dsdQ += cur_F;
+ 
++          // DEBUG: Store full force
++          write(xml_out, "FullForce", cur_F);
++
+ 	  QDPIO::cout << "FORCE TIME: " << monomials[i].id << " : " << swatch.getTimeInSeconds() << "\n";
+  
+ 	  pop(xml_out); // elem
+@@ -112,7 +117,7 @@ namespace Chroma
+ 	//  dt*p[mu]
+ 	tmp_1 = real_step_size[mu]*(s.getP())[mu];
+ 	
+-	// tmp_1 = exp(dt*p[mu])  
++	// tmp_1 = exp(dt*p[mu])
+ 	// expmat(tmp_1, EXP_TWELFTH_ORDER);
+ 	expmat(tmp_1, EXP_EXACT);
+ 	
+diff --git a/lib/update/molecdyn/monomial/one_flavor_rat_monomial_w.h b/lib/update/molecdyn/monomial/one_flavor_rat_monomial_w.h
+index ab9045ce0..92a6eccd4 100644
+--- a/lib/update/molecdyn/monomial/one_flavor_rat_monomial_w.h
++++ b/lib/update/molecdyn/monomial/one_flavor_rat_monomial_w.h
+@@ -257,6 +257,14 @@ namespace Chroma
+       END_CODE();
+     }
+ 
++    // FORNOW:
++    //! Write internal fields out to xml
++    virtual void writeInternalFields(XMLWriter& xml_out, const std::string& tag) const {
++      START_CODE();
++      write(xml_out, tag, getPhi());
++      END_CODE();
++    }
++    
+ 
+     //! Compute the action on the appropriate subset
+     /*!
+diff --git a/lib/update/molecdyn/monomial/two_flavor_monomial_w.h b/lib/update/molecdyn/monomial/two_flavor_monomial_w.h
+index e9a399fe1..82458feee 100644
+--- a/lib/update/molecdyn/monomial/two_flavor_monomial_w.h
++++ b/lib/update/molecdyn/monomial/two_flavor_monomial_w.h
+@@ -168,6 +168,14 @@ namespace Chroma
+       END_CODE();
+     }
+ 
++    // FORNOW:
++    //! Write internal fields out to xml
++    virtual void writeInternalFields(XMLWriter& xml_out, const std::string& tag) const {
++      START_CODE();
++      write(xml_out, tag, getPhi());
++      END_CODE();
++    }
++
+     //! Reset predictors
+     virtual void resetPredictors(void) {
+       getMDSolutionPredictor().reset();
+@@ -236,6 +244,7 @@ namespace Chroma
+       // Solve MdagM X = eta
+       SystemSolverResults_t res = (*invMdagM)(X, getPhi());
+       QDPIO::cout << "2Flav::invert,  n_count = " << res.n_count << std::endl;
++      write(xml_out, "ferm_X", X);
+ 
+       // Action on the entire lattice
+       Double action = innerProductReal(getPhi(), X);

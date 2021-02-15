@@ -24,7 +24,7 @@
     <SavePrefix>dummy_run</SavePrefix>
     <SaveVolfmt>SINGLEFILE</SaveVolfmt>
     <ReproCheckP>false</ReproCheckP>
-    <ReverseCheckP>true</ReverseCheckP>
+    <ReverseCheckP>false</ReverseCheckP>
     <ReverseCheckFrequency>1</ReverseCheckFrequency>
     <InlineMeasurements>
       <elem>
@@ -46,8 +46,8 @@
 	<Name>TWO_FLAVOR_EOPREC_CONSTDET_FERM_MONOMIAL</Name>
 	<InvertParam>
           <invType>CG_INVERTER</invType>
-          <RsdCG>1.0e-7</RsdCG>
-          <MaxCG>1000</MaxCG>
+          <RsdCG>1.0e-8</RsdCG>
+          <MaxCG>10000</MaxCG>
         </InvertParam>
         <FermionAction>
           <FermAct>WILSON</FermAct>
@@ -88,10 +88,10 @@
    </Hamiltonian>
   
    <MDIntegrator>
-        <tau0>0.5</tau0>
+        <tau0>0.2</tau0>
 	<Integrator>	
 	  <Name>LCM_STS_LEAPFROG</Name>
-	  <n_steps>25</n_steps>
+	  <n_steps>60</n_steps>
 	  <monomial_ids>
 	    <elem>wilson_two_flav</elem>
 	    <elem>gauge</elem>

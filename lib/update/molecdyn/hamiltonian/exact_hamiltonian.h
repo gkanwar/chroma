@@ -144,11 +144,11 @@ namespace Chroma
 
     //! This creates the hamiltonian. It is similar to the 
     void create(const multi1d<std::string>& monomial_ids);
-    
 
+   public:
+    // FORNOW: Break encapsulation for tests!
     multi1d< Handle<ExactMon> >  monomials;
 
-    
   };
 
 }

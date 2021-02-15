@@ -257,6 +257,14 @@ namespace Chroma
       END_CODE();
     }
 
+    // FORNOW:
+    //! Write internal fields out to xml
+    virtual void writeInternalFields(XMLWriter& xml_out, const std::string& tag) const {
+      START_CODE();
+      write(xml_out, tag, getPhi());
+      END_CODE();
+    }
+    
 
     //! Compute the action on the appropriate subset
     /*!

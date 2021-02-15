@@ -168,6 +168,14 @@ namespace Chroma
       END_CODE();
     }
 
+    // FORNOW:
+    //! Write internal fields out to xml
+    virtual void writeInternalFields(XMLWriter& xml_out, const std::string& tag) const {
+      START_CODE();
+      write(xml_out, tag, getPhi());
+      END_CODE();
+    }
+
     //! Reset predictors
     virtual void resetPredictors(void) {
       getMDSolutionPredictor().reset();
@@ -236,6 +244,7 @@ namespace Chroma
       // Solve MdagM X = eta
       SystemSolverResults_t res = (*invMdagM)(X, getPhi());
       QDPIO::cout << "2Flav::invert,  n_count = " << res.n_count << std::endl;
+      write(xml_out, "ferm_X", X);
 
       // Action on the entire lattice
       Double action = innerProductReal(getPhi(), X);

@@ -79,8 +79,8 @@ namespace Chroma
 #else
     //not yet
     //for(unsigned int s=0; s<quda_inv_param.Ls; s++){
-    //	spinorIn[s]=QDPCache::Instance().getDevicePtr( chi_s[s].getId() );
-    //	spinorOut[s]=QDPCache::Instance().getDevicePtr( psi_s[s].getId() );
+    //	spinorIn[s]=QDP_get_global_cache().getDevicePtr( chi_s[s].getId() );
+    //	spinorOut[s]=QDP_get_global_cache().getDevicePtr( psi_s[s].getId() );
     //}
 #endif
     
@@ -106,8 +106,8 @@ namespace Chroma
 #else
     //not yet implemented
     //for(unsigned int s=0; s<quda_inv_param.Ls; s++){
-    //	spinorIn[s]=QDPCache::Instance().getDevicePtr( chi_s[s].getId() );
-    //	spinorOut[s]=QDPCache::Instance().getDevicePtr( psi_s[s].getId() );
+    //	spinorIn[s]=QDP_get_global_cache().getDevicePtr( chi_s[s].getId() );
+    //	spinorOut[s]=QDP_get_global_cache().getDevicePtr( psi_s[s].getId() );
     //}
 #endif
     

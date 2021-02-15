@@ -47,6 +47,8 @@ namespace Chroma
 	monomials[0].mon->dsdq(dsdQ,s);
 	swatch.stop();
 	QDPIO::cout << "FORCE TIME: " << monomials[0].id <<  " : " << swatch.getTimeInSeconds() << std::endl;
+        // DEBUG: Store full force
+        write(xml_out, "FullForce", dsdQ);
 	pop(xml_out); //elem
 	for(int i=1; i < monomials.size(); i++) { 
 	  push(xml_out, "elem");
@@ -55,6 +57,9 @@ namespace Chroma
 	  monomials[i].mon->dsdq(cur_F, s);
 	  swatch.stop();
 	  dsdQ += cur_F;
+
+          // DEBUG: Store full force
+          write(xml_out, "FullForce", cur_F);
 
 	  QDPIO::cout << "FORCE TIME: " << monomials[i].id << " : " << swatch.getTimeInSeconds() << "\n";
  
@@ -112,7 +117,7 @@ namespace Chroma
 	//  dt*p[mu]
 	tmp_1 = real_step_size[mu]*(s.getP())[mu];
 	
-	// tmp_1 = exp(dt*p[mu])  
+	// tmp_1 = exp(dt*p[mu])
 	// expmat(tmp_1, EXP_TWELFTH_ORDER);
 	expmat(tmp_1, EXP_EXACT);
 	
