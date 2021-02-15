@@ -13,6 +13,8 @@ namespace Chroma
    */
   void unitarityCheck(const multi1d<LatticeColorMatrixF3>& u);
   void unitarityCheck(const multi1d<LatticeColorMatrixD3>& u);
+  void unitarityCheck(const multi1d<LatticeColorMatrixF2>& u);
+  void unitarityCheck(const multi1d<LatticeColorMatrixD2>& u);
 
 }
 

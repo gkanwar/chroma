@@ -47,5 +47,34 @@ namespace Chroma
     END_CODE();
   }
 
+  void unitarityCheck(const multi1d<LatticeColorMatrixF2>& u)
+  {
+    START_CODE();
+
+    int numbad;
+
+    for (int mu=0; mu < Nd; ++mu)
+    {
+      LatticeColorMatrixF2 u_tmp = u[mu];
+      reunit(u_tmp, numbad, REUNITARIZE_ERROR);
+    }
+    
+    END_CODE();
+  }
+
+ void unitarityCheck(const multi1d<LatticeColorMatrixD2>& u)
+  {
+    START_CODE();
+
+    int numbad;
+
+    for (int mu=0; mu < Nd; ++mu)
+    {
+      LatticeColorMatrixD2 u_tmp = u[mu];
+      reunit(u_tmp, numbad, REUNITARIZE_ERROR);
+    }
+    
+    END_CODE();
+  }
 }
 

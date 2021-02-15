@@ -22,11 +22,11 @@ namespace Chroma
     START_CODE();
         
     // Initial Polyakov loop
-    LatticeColorMatrix poly = u[mu];
+    Q poly = u[mu];
 
     for(int n = 1; n < Layout::lattSize()[mu]; ++n)  // run over all links in mu dir
     {    
-      LatticeColorMatrix tmp = shift(poly, FORWARD, mu);
+      Q tmp = shift(poly, FORWARD, mu);
       poly = u[mu] * tmp;
     }
 
@@ -43,6 +43,16 @@ namespace Chroma
   }
 
   void polylp(const multi1d<LatticeColorMatrixD3>& u, DComplex& poly_loop, int mu)
+  {
+     polylp_t(u, poly_loop, mu);
+  }
+
+  void polylp(const multi1d<LatticeColorMatrixF2>& u, DComplex& poly_loop, int mu) 
+  {
+     polylp_t( u, poly_loop, mu);
+  }
+
+  void polylp(const multi1d<LatticeColorMatrixD2>& u, DComplex& poly_loop, int mu)
   {
      polylp_t(u, poly_loop, mu);
   }
@@ -74,6 +84,16 @@ namespace Chroma
   }
 
   void polylp(const multi1d<LatticeColorMatrixD3>& u, multi1d<DComplex>& poly_loop)
+  {
+      polylp_t(u,poly_loop);
+  }
+
+  void polylp(const multi1d<LatticeColorMatrixF2>& u, multi1d<DComplex>& poly_loop)
+  { 
+      polylp_t(u,poly_loop);
+  }
+
+  void polylp(const multi1d<LatticeColorMatrixD2>& u, multi1d<DComplex>& poly_loop)
   {
       polylp_t(u,poly_loop);
   }
